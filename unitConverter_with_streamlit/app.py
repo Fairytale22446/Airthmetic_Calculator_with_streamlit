@@ -21,10 +21,29 @@ st.title("🔄 Glassmorphism Unit Converter")
 
 st.subheader("Convert different units with a modern UI!")
 
+# Conversion factors (All relative to meters)
+conversion_factors = {
+    "km": 1000,
+    "m": 1,
+    "cm": 0.01,
+    "mm": 0.001,
+    "mile": 1609.34,
+    "yard": 0.9144,
+    "foot": 0.3048,
+    "inch": 0.0254,
+    "nautical mile": 1852,
+}
+
 value = st.number_input("Enter Value", min_value=0.0, format="%.4f")
-from_unit = st.selectbox("From Unit", ["km", "m", "cm", "mm", "mile", "yard"])
-to_unit = st.selectbox("To Unit", ["km", "m", "cm", "mm", "mile", "yard"])
+from_unit = st.selectbox("From Unit", list(conversion_factors.keys()))
+to_unit = st.selectbox("To Unit", list(conversion_factors.keys()))
 convert = st.button("🔄 Convert")
 
 if convert:
-    st.success(f"Converted Value: **{value} {from_unit} = ??? {to_unit}**")
+    if from_unit == to_unit:
+        converted_value = value  # Same unit conversion
+    else:
+        # Convert to meters first, then to target unit
+        converted_value = value * (conversion_factors[from_unit] / conversion_factors[to_unit])
+
+    st.success(f"Converted Value: **{value} {from_unit} = {converted_value:.4f} {to_unit}**")
